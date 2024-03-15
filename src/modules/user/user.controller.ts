@@ -4,7 +4,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./entities/user.entity";
 import { LoginUserDTO } from "./dtos/login-user.dto";
-import { AuthGuard } from "./auth.guard";
+import { AuthGuard } from "./guards/auth.guard";
 
 @Controller('user')
 export class UserController {

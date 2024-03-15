@@ -1,5 +1,5 @@
 import { IsNumber, IsOptional, Min, Max, MinLength, MaxLength, IsNotEmpty, isNumber, isNumberString, IsNumberString } from "class-validator";
-import { User } from "src/user/entities/user.entity";
+import { User } from "src/modules/user/entities/user.entity";
 
 export class AddLocationDTO {
     @MinLength(3)

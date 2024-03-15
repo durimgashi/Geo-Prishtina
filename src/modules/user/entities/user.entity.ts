@@ -1,5 +1,8 @@
-import { Location } from "src/location/entities/location.entity";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Location } from "src/modules/location/entities/location.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { Role } from "./role.entity";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Entity('users')
 export class User {
@@ -41,4 +44,16 @@ export class User {
 
     @OneToMany(() => Location, location => location.user)
     locations: Location[];
+
+    @ManyToOne(() => Role, role => role.users)
+    role: Role
+
+    constructor() {
+        let defaultRole = new Role()
+        defaultRole.id = 2
+        defaultRole.name = "User"
+        defaultRole.alias = "USER"
+
+        this.role = defaultRole 
+    }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from './entities/location.entity';
 import { LocationRepository } from './location.repository';
 import { AddLocationDTO } from './dtos/add-location.dto';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 import { DeleteLocationDTO } from './dtos/delete-location.dto';
 import { DeleteResult, Repository } from 'typeorm';
 
@@ -11,7 +11,6 @@ import { DeleteResult, Repository } from 'typeorm';
 export class LocationService {
 
     constructor(
-        // @InjectRepository(Location) 
         private readonly locationRepository: LocationRepository
     ) {}
 
@@ -24,6 +23,7 @@ export class LocationService {
     }
 
     async getMyLocations(@Req() req: Request): Promise<Location[]> {
+        console.log(req['user'])
         return await this.locationRepository.find({
             where: {
                 user: req['user'],

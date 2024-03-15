@@ -7,6 +7,9 @@ import * as bcrypt from 'bcrypt'
 import { LoginUserDTO } from "./dtos/login-user.dto";
 import { NotFoundError } from "rxjs";
 import { JwtService } from "@nestjs/jwt";
+import { Repository } from "typeorm";
+import { Role } from "./entities/role.entity";
+import { JWTPayload } from "src/utils/types/jwt_payload";
 
 @Injectable()
 export class UserService {
@@ -33,13 +36,9 @@ export class UserService {
             }
         })
 
-        console.log(email_exists)
-
         if (email_exists > 0) {
             throw new ConflictException("This email is already registered")
         }
-
-        console.log(user.password)
 
         const saltOrRounds = 10
         const hash = await bcrypt.hash(user.password, saltOrRounds)
@@ -51,9 +50,13 @@ export class UserService {
 
     async loginUser(loginUserDto: LoginUserDTO): Promise<{ access_token: string }> {
         const user = await this.userRepository.findOne({
+            select: [
+                'id', 'uuid', 'password', 'name', 'surname', 'email', 'role'
+            ],
             where: {
                 email: loginUserDto.email
-            }
+            },
+            relations: ['role']
         })
 
         if (!user) {
@@ -66,12 +69,13 @@ export class UserService {
             throw new UnauthorizedException("Email or password are incorrect")
         }
 
-        const payload = {
+        const payload: JWTPayload = {
             id: user.id,
             uuid: user.uuid,
             name: user.name,
             surname: user.surname,
-            email: user.email
+            email: user.email,
+            role: user.role.alias
         }
 
         return {
