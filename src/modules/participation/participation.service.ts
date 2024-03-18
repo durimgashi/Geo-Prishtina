@@ -82,6 +82,23 @@ export class ParticipationService {
         return response
     }
 
+    async myParticipations(req: Request): Promise<Participation[]> {
+        const user: User = req['user']
+
+        const participations: Participation[] = await this.participationRepository.find({
+            where: {
+                user: {
+                    id: user.id
+                },
+                location: {
+                    isDeleted: false
+                }
+            }
+        })
+
+        return participations
+    }
+
     private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
         const earthRadiusInKm = 6371
         const dLat = this.degreesToRadians(lat2 - lat1)
