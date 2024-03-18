@@ -3,7 +3,7 @@ import { User } from "src/modules/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity('paricipations')
+@Entity('participations')
 export class Participation {
     @PrimaryGeneratedColumn()
     id: number
@@ -16,6 +16,11 @@ export class Participation {
 
     @Column()
     distance: number
+
+    @Column({
+        default: 0
+    })
+    points: number
 
     @CreateDateColumn()
     date: Date
