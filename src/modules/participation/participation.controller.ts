@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { ParticipateDTO } from "./dtos/participate.dto";
 import { ParticipationService } from "./participation.service";
 import { AuthGuard } from "../user/guards/auth.guard";
@@ -22,5 +22,11 @@ export class ParticipationController {
     @Get('mine')
     async myParticipations(@Req() req: Request): Promise<Participation[]> {
         return await this.participationService.myParticipations(req)
+    }
+
+    @UseGuards(AuthGuard)
+    @Get(":id")
+    async getParticipationsByID(@Param('id') id: number, @Req() req: Request): Promise<Participation> {
+        return await this,this.participationService.getParticipationByID(id, req)
     }
 }

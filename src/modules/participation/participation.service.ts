@@ -5,6 +5,7 @@ import { LocationRepository } from "../location/location.repository";
 import { User } from "../user/entities/user.entity";
 import { ParticipationResponse } from "src/utils/responses/participation.response";
 import { Participation } from "./entities/participation.entity";
+import { PointsRepository } from "./points.repository";
 
 @Injectable()
 export class ParticipationService {
@@ -13,11 +14,12 @@ export class ParticipationService {
 
     constructor(
         private readonly participationRepository: ParticipationRepository,
-        private readonly locationRepository: LocationRepository
+        private readonly locationRepository: LocationRepository,
+        private readonly pointsRepository: PointsRepository
     ){}
 
     async participate(participateDto: ParticipateDTO, req: Request): Promise<ParticipationResponse> {
-        const user: User = req['user']
+        let user: User = req['user']
 
         const location = await this.locationRepository.findOne({
             where: {
@@ -69,6 +71,13 @@ export class ParticipationService {
         participation.distance = distance
         participation.points = points
 
+
+        const save_points = await this.pointsRepository.setUserPoints(user, points)
+
+        if (!save_points) {
+            throw new Error("Failed to save user points")
+        }
+        
         let save = await this.participationRepository.save(participation)
 
         if(!save) {
@@ -97,6 +106,16 @@ export class ParticipationService {
         })
 
         return participations
+    }
+
+    async getParticipationByID(id: number, req: Request): Promise<Participation> {
+        const participation: Participation = await this.participationRepository.findByID(id)
+
+        if(!participation) {
+            throw new NotFoundException("Failed to find participation")
+        }
+
+        return participation
     }
 
     private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {

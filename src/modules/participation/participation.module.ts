@@ -9,6 +9,8 @@ import { LocationRepository } from "../location/location.repository";
 import { UserModule } from "../user/user.module";
 import { UserRepository } from "../user/user.repository";
 import { User } from "../user/entities/user.entity";
+import { Points } from "./entities/points.entity";
+import { PointsRepository } from "./points.repository";
 
 
 @Module({
@@ -16,7 +18,8 @@ import { User } from "../user/entities/user.entity";
         TypeOrmModule.forFeature([
             Participation,
             Location,
-            User
+            User,
+            Points
         ])
     ],
     controllers: [
@@ -25,7 +28,8 @@ import { User } from "../user/entities/user.entity";
     providers: [
         ParticipationService,
         ParticipationRepository,
-        LocationRepository
+        LocationRepository,
+        PointsRepository
     ]
 })
 export class ParticipationModule {}
