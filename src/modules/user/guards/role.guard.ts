@@ -30,7 +30,7 @@ export class RoleGuard implements CanActivate {
         }
 
         if (!requiredRoles) {
-            return true;
+            return true
         }
 
         try {
@@ -52,8 +52,8 @@ export class RoleGuard implements CanActivate {
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {
-        const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type === 'Bearer' ? token : undefined;
+        const [type, token] = request.headers.authorization?.split(' ') ?? []
+        return type === 'Bearer' ? token : undefined
     }
 
 }

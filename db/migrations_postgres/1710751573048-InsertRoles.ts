@@ -1,6 +1,7 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InsertRoles1612345678901 implements MigrationInterface {
+export class InsertRoles1710751573048 implements MigrationInterface {
+
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             INSERT INTO roles (id, name, alias) VALUES 
@@ -14,4 +15,5 @@ export class InsertRoles1612345678901 implements MigrationInterface {
             DELETE FROM roles WHERE id IN (1, 2);
         `);
     }
+
 }

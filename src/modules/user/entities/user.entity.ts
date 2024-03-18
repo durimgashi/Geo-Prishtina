@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColum
 import { Role } from "./role.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Participation } from "src/modules/participation/entities/participation.entity";
 
 @Entity('users')
 export class User {
@@ -47,6 +48,9 @@ export class User {
 
     @ManyToOne(() => Role, role => role.users)
     role: Role
+
+    @OneToMany(() => Participation, participations => participations.user)
+    participations: Participation[]
 
     constructor() {
         let defaultRole = new Role()

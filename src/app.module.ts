@@ -10,21 +10,26 @@ import { ConfigModule } from '@nestjs/config';
 import { LocationModule } from './modules/location/location.module';
 import { RoleGuard } from './modules/user/guards/role.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { ParticipationModule } from './modules/participation/participation.module';
+
+const modules = [
+    UserModule,
+    LocationModule,
+    ParticipationModule
+]
 
 @Module({
     imports: [
-        UserModule,
-        LocationModule,
+        ...modules,        
         TypeOrmModule.forRoot(dataSourceOptions),
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true
-          }),
-        LocationModule
+        }),
     ],
     controllers: [AppController],
     providers: [
-        AppService
+        AppService  
     ],
 })
 export class AppModule { }

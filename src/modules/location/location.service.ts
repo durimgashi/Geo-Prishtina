@@ -23,13 +23,16 @@ export class LocationService {
     }
 
     async getMyLocations(@Req() req: Request): Promise<Location[]> {
-        console.log(req['user'])
-        return await this.locationRepository.find({
+        let res= await this.locationRepository.find({
             where: {
-                user: req['user'],
+                user: req['user'].id, 
                 isDeleted: false
             }
         })
+
+        console.log(res)
+
+        return res
     }
 
     async addLocation(@Req() req: Request, addLocationDTO: AddLocationDTO, file: Express.Multer.File): Promise<Location> {
@@ -48,6 +51,16 @@ export class LocationService {
     }
 
     async deleteLocation(deleteLocationDTO: DeleteLocationDTO, req: Request): Promise<any> {
+        const locationExists = await this.locationRepository.findOne({
+            where: {
+                uuid: deleteLocationDTO.uuid
+            }
+        })
+
+        if(!locationExists) {
+            throw new NotFoundException("The provided location does not exist")
+        }
+
         return await this.locationRepository.deleteLocation(deleteLocationDTO)
     }
  
