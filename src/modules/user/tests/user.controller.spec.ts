@@ -14,8 +14,8 @@ import { AccessTokenResponse } from 'src/utils/responses/AccessToken.response';
 require('dotenv').config()
 
 describe('UserController', () => {
-    let controller: UserController;
-    let userService: UserService;
+    let controller: UserController
+    let userService: UserService
     let module: TestingModule
 
     beforeEach(async () => {
@@ -26,7 +26,6 @@ describe('UserController', () => {
                 {
                     provide: getRepositoryToken(User),
                     useValue: {
-                        // find: jest.fn().mockResolvedValue([{ id: 1, username: 'user1' }, { id: 2, username: 'user2' }]),
                         findOne: jest.fn().mockResolvedValue(entity => entity),
                         count: jest.fn().mockResolvedValue(0),
                         save: jest.fn().mockImplementation(entity => entity),
@@ -36,15 +35,15 @@ describe('UserController', () => {
                 },
                 JwtService,
             ],
-        }).compile();
+        }).compile()
 
-        controller = module.get<UserController>(UserController);
-        userService = module.get<UserService>(UserService);
-    });
+        controller = module.get<UserController>(UserController)
+        userService = module.get<UserService>(UserService)
+    })
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
-    });
+    })
 
 
     describe('Create User', () => {
@@ -99,7 +98,7 @@ describe('UserController', () => {
                 err = error
             }
             
-            expect(err).toBeInstanceOf(BadRequestException);
+            expect(err).toBeInstanceOf(BadRequestException)
 
         })
 
@@ -118,7 +117,7 @@ describe('UserController', () => {
 
 
             try {
-                await controller.createUser(createUserDto);
+                await controller.createUser(createUserDto)
             } catch (error) {
                 expect(error).toBeInstanceOf(ConflictException)
             }
@@ -151,6 +150,7 @@ describe('UserController', () => {
             const result = await controller.loginUser(loginUserDto)
 
             expect(result).toBeInstanceOf(AccessTokenResponse)
+            expect(typeof result.access_token).toBe('string')
         })
 
     })
