@@ -7,14 +7,19 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { Gender } from 'src/utils/enums/gender.enum';
 import { Role } from '../entities/role.entity';
-import { BadRequestException, HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { LoginUserDTO } from '../dtos/login-user.dto';
+import * as bcrypt from 'bcrypt'
+import { AccessTokenResponse } from 'src/utils/responses/AccessToken.response';
+require('dotenv').config()
 
 describe('UserController', () => {
     let controller: UserController;
     let userService: UserService;
+    let module: TestingModule
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        module = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
                 UserService,
@@ -22,7 +27,7 @@ describe('UserController', () => {
                     provide: getRepositoryToken(User),
                     useValue: {
                         // find: jest.fn().mockResolvedValue([{ id: 1, username: 'user1' }, { id: 2, username: 'user2' }]),
-                        // findOne: jest.fn().mockResolvedValue({ id: 1, username: 'user1' }),
+                        findOne: jest.fn().mockResolvedValue(entity => entity),
                         count: jest.fn().mockResolvedValue(0),
                         save: jest.fn().mockImplementation(entity => entity),
                         update: jest.fn().mockImplementation((criteria, data) => ({ ...criteria, ...data })),
@@ -79,16 +84,6 @@ describe('UserController', () => {
                 gender: Gender.Male,
                 birthday:(new Date()).toDateString()
             }
-
-            // const invalidData: CreateUserDTO = {
-            //     name: "Luke",
-            //     surname: "Skywalker",
-            //     email: "lukeskywalker@rebelion.com",
-            //     password: "TheForce123",
-            //     gender: Gender.Male,
-            //     birthday: (new Date()).toDateString()
-            // }
-
         
             const validationPipe = new ValidationPipe({ transform: true });
             let err: any
@@ -107,5 +102,56 @@ describe('UserController', () => {
             expect(err).toBeInstanceOf(BadRequestException);
 
         })
+
+        it("should throw a ConflictException when creating the same user again", async () => {
+            const createUserDto: CreateUserDTO = {
+                name: "Luke",
+                surname: "Skywalker",
+                email: "lukeskywalker@rebelion.com",
+                password: "TheForce123",
+                gender: Gender.Male,
+                birthday: (new Date()).toDateString()
+            }
+
+            const userRepositoryMock = module.get(getRepositoryToken(User))
+            jest.spyOn(userRepositoryMock, 'count').mockResolvedValue(1)
+
+
+            try {
+                await controller.createUser(createUserDto);
+            } catch (error) {
+                expect(error).toBeInstanceOf(ConflictException)
+            }
+        }) 
+    })
+
+
+    describe('Login User', () => {
+      
+        it("should return an access token on successful login", async () => {
+            const loginUserDto: LoginUserDTO = {
+                email: "lukeskywalker@rebelion.com",
+                password: "TheForce123"
+            }
+
+            jest.spyOn(bcrypt, 'compare').mockResolvedValue(true)
+
+            const userRepositoryMock = module.get(getRepositoryToken(User))
+
+            jest.spyOn(userRepositoryMock, 'findOne').mockResolvedValue({
+                id: 1,
+                uuid: 'some-uuid',
+                name: 'Luke',
+                surname: 'Skywalker',
+                email: 'lukeskywalker@rebelion.com',
+                password: 'TheForce123',
+                role: { alias: 'USER' } 
+            })
+ 
+            const result = await controller.loginUser(loginUserDto)
+
+            expect(result).toBeInstanceOf(AccessTokenResponse)
+        })
+
     })
 });

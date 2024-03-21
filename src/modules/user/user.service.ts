@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt'
 import { LoginUserDTO } from "./dtos/login-user.dto"; 
 import { JwtService } from "@nestjs/jwt";
 import { JWTPayload } from "src/utils/types/jwt_payload";
+import { AccessTokenResponse } from "src/utils/responses/AccessToken.response";
 
 @Injectable()
 export class UserService {
@@ -45,8 +46,8 @@ export class UserService {
         return await this.userRepository.save(user)
     }
 
-    async loginUser(loginUserDto: LoginUserDTO): Promise<{ access_token: string }> {
-        const user = await this.userRepository.findOne({
+    async loginUser(loginUserDto: LoginUserDTO): Promise<AccessTokenResponse> {
+        const user: User = await this.userRepository.findOne({
             select: [
                 'id', 'uuid', 'password', 'name', 'surname', 'email', 'role'
             ],
@@ -75,11 +76,13 @@ export class UserService {
             role: user.role.alias
         }
 
-        return {
-            access_token: await this.jwtService.signAsync(payload, {
-                secret: process.env.JWT_SECRET
-            }),
-        }
+        let response: AccessTokenResponse = new AccessTokenResponse()
+
+        response.access_token = await this.jwtService.signAsync(payload, {
+            secret: process.env.JWT_SECRET
+        })
+
+        return response
     }
 
     async userProfile(req: Request): Promise<User> {
