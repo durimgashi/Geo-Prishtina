@@ -1,10 +1,6 @@
 import { IsString, IsEmail, IsNotEmpty, IsEnum, IsDate, IsOptional } from 'class-validator';
+import { Gender } from 'src/utils/enums/gender.enum';
 
-enum Gender {
-    Male = 'male',
-    Female = 'female',
-    Other = 'other',
-}
 
 export class CreateUserDTO {
     @IsString()

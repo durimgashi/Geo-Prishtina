@@ -7,7 +7,7 @@ COPY yarn.lock ./
 
 RUN yarn install
 
-RUN sleep 2000
+RUN sleep 5
 
 COPY . .
 

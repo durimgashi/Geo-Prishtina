@@ -1,8 +1,6 @@
 import { Location } from "src/modules/location/entities/location.entity";
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { Role } from "./role.entity";
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Participation } from "src/modules/participation/entities/participation.entity";
 import { Points } from "src/modules/participation/entities/points.entity";
 

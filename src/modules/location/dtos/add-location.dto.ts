@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, Min, Max, MinLength, MaxLength, IsNotEmpty, isNumber, isNumberString, IsNumberString } from "class-validator";
+import { IsNumber, IsOptional, Min, Max, MinLength, MaxLength, IsNotEmpty, isNumber, isNumberString, IsNumberString, IsLatitude, IsLongitude } from "class-validator";
 import { User } from "src/modules/user/entities/user.entity";
 
 export class AddLocationDTO {
@@ -12,14 +12,12 @@ export class AddLocationDTO {
 
    
     @IsNumberString()
-    // @Min(-90)
-    // @Max(90)
+    @IsLatitude() 
     lat: number;
 
 
     @IsNumberString()
-    // @Min(-180)
-    // @Max(180)
+    @IsLongitude() 
     long: number;
 
     user: User;

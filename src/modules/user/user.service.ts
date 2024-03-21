@@ -4,11 +4,8 @@ import { User } from "./entities/user.entity";
 import { UserRepository } from "./user.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from 'bcrypt'
-import { LoginUserDTO } from "./dtos/login-user.dto";
-import { NotFoundError } from "rxjs";
+import { LoginUserDTO } from "./dtos/login-user.dto"; 
 import { JwtService } from "@nestjs/jwt";
-import { Repository } from "typeorm";
-import { Role } from "./entities/role.entity";
 import { JWTPayload } from "src/utils/types/jwt_payload";
 
 @Injectable()

@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
 import { Role } from "../entities/role.entity";
 import { ROLES_KEY } from "src/decorators/roles.decorator";
 import { JwtService } from "@nestjs/jwt";

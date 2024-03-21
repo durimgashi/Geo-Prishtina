@@ -1,11 +1,8 @@
 import { Injectable, NotFoundException, Req } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Location } from './entities/location.entity';
 import { LocationRepository } from './location.repository';
-import { AddLocationDTO } from './dtos/add-location.dto';
-import { User } from 'src/modules/user/entities/user.entity';
-import { DeleteLocationDTO } from './dtos/delete-location.dto';
-import { DeleteResult, Repository } from 'typeorm';
+import { AddLocationDTO } from './dtos/add-location.dto'; 
+import { DeleteLocationDTO } from './dtos/delete-location.dto'; 
 
 @Injectable()
 export class LocationService {
