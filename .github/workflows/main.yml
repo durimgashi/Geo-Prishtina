@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker exec -it gp-app yarn run test
+          docker exec gp-app yarn run test
 
 
       
