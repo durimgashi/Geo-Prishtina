@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { Gender } from 'src/utils/enums/gender.enum';
 import { Role } from '../entities/role.entity';
-import { BadRequestException, ConflictException, HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, HttpStatus, NotFoundException, UnauthorizedException, ValidationPipe } from '@nestjs/common';
 import { LoginUserDTO } from '../dtos/login-user.dto';
 import * as bcrypt from 'bcrypt'
 import { AccessTokenResponse } from 'src/utils/responses/AccessToken.response';
@@ -151,6 +151,22 @@ describe('UserController', () => {
 
             expect(result).toBeInstanceOf(AccessTokenResponse)
             expect(typeof result.access_token).toBe('string')
+        })
+
+        it("should return NotFoundException not existing email", async () => {
+            const loginUserDto: LoginUserDTO = {
+                email: "lukeskywalker@empire.gov",
+                password: "wrongpassword"
+            }
+
+            try { 
+                jest.spyOn(module.get(getRepositoryToken(User)), 'findOne').mockResolvedValue(false)
+
+                await controller.loginUser(loginUserDto)
+            } catch (error) {
+                expect(error).toBeInstanceOf(NotFoundException)
+            }
+
         })
 
     })

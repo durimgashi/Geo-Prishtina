@@ -1,7 +1,0 @@
-FROM postgres:16.2
-
-ENV POSTGRES_DB=geo_prishtina \
-    POSTGRES_USER=root \
-    POSTGRES_PASSWORD=root
-
-EXPOSE 5432
